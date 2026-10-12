@@ -38,3 +38,28 @@ declare global {
     };
   }
 }
+
+/**
+ * Represents cryptocurrency data used across the application.
+ *
+ * @property {string} id - Unique identifier of the coin (e.g. "bitcoin").
+ * @property {string} name - Full name of the coin (e.g. "Bitcoin").
+ * @property {string} symbol - Ticker symbol (e.g. "BTC").
+ * @property {string} price - Current price in USDT as a string.
+ * @property {string} change24h - 24h percentage change as a string.
+ * @property {number} marketValue - Market capitalization in USD.
+ * @property {number} [priceChange] - Last tick price difference (for flashing).
+ * @property {number} [previousPrice] - Previous price before last tick.
+ * @property {number[]} [priceHistory] - Last N prices for the sparkline.
+ */
+export interface CoinData {
+  id?: string;
+  name: string;
+  symbol: string;
+  price: string;
+  change24h: string;
+  marketValue: number;
+  priceChange?: number;
+  previousPrice?: number;
+  priceHistory?: number[];
+}

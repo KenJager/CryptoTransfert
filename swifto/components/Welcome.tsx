@@ -1,162 +1,125 @@
-"use client"
+"use client";
 
-import { useContext, type ChangeEvent, type FormEvent } from "react";
-import { PlayCircle, Info } from "lucide-react";
-import EthereumIcon from "./icons/";
+import { useContext } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import {
+  PlayCircle,
+  Send,
+  ShieldCheck,
+  Coins,
+  Globe,
+  Zap,
+  Lock,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 import { TransactionContext } from "@/context/TransactionContext";
-import { shortenAddress } from "@/utils/shortenAddress";
-import { Loader } from ".";
 import { cn } from "@/utils/cn";
-import type { FormData } from "@/types";
 
-const companyCommonStyles =
-  "min-h-[70px] sm:px-0 px-2 sm:min-w-[120px] flex justify-center items-center border-[0.5px] border-gray-400 text-sm font-light text-white";
-
-interface InputProps {
-  placeholder: string;
-  name: keyof FormData;
-  type: string;
-  value?: string;
-  handleChange: (e: ChangeEvent<HTMLInputElement>, name: keyof FormData) => void;
+interface Feature {
+  label: string;
+  icon: LucideIcon;
 }
 
-const Input = ({ placeholder, name, type, value, handleChange }: InputProps) => (
-  <input
-    placeholder={placeholder}
-    type={type}
-    step={type === "number" ? "0.0001" : undefined}
-    value={value}
-    onChange={(e) => handleChange(e, name)}
-    className="my-2 w-full rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism"
-  />
-);
+const features: Feature[] = [
+  { label: "Reliability", icon: ShieldCheck },
+  { label: "Security", icon: Lock },
+  { label: "Ethereum", icon: Coins },
+  { label: "Web 3.0", icon: Globe },
+  { label: "Low Fees", icon: Zap },
+  { label: "Blockchain", icon: Coins },
+];
 
 const Welcome = () => {
-  const {
-    currentAccount,
-    connectWallet,
-    handleChange,
-    sendTransaction,
-    formData,
-    isLoading,
-  }:any = useContext(TransactionContext);
-
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const { addressTo, amount, keyword, message } = formData;
-    if (!addressTo || !amount || !keyword || !message) return;
-    sendTransaction();
-  };
+  const { currentAccount, connectWallet } = useContext(TransactionContext)!;
 
   return (
-    <div className="flex w-full justify-center items-center">
-      <div className="flex mf:flex-row flex-col items-start justify-between md:p-20 py-12 px-4">
-        <div className="flex flex-1 justify-start items-start flex-col mf:mr-10">
-          <h1 className="text-3xl sm:text-5xl text-white text-gradient py-1">
-            Send Crypto <br /> across the world
-          </h1>
-          <p className="text-left mt-5 text-white font-light md:w-9/12 w-11/12 text-base">
-            Explore the crypto world. Buy and sell cryptocurrencies easily on
-            Krypto.
-          </p>
+    <section className="relative w-full overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 pt-32 pb-16">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
+          {/* Colonne gauche : texte + CTA + features */}
+          <div className="flex-1 flex flex-col justify-start items-start">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl text-white text-gradient leading-tight">
+              Envoyez de la crypto
+              <br />
+              partout dans le monde
+            </h1>
 
-          {!currentAccount && (
-            <button
-              type="button"
-              onClick={connectWallet}
-              className="flex flex-row justify-center items-center my-5 bg-[#2952e3] p-3 rounded-full cursor-pointer hover:bg-[#2546bd]"
-            >
-              <PlayCircle className="text-white mr-2" size={20} />
-              <p className="text-white text-base font-semibold">
-                Connect Wallet
-              </p>
-            </button>
-          )}
+            <p className="text-left mt-5 text-white/70 font-light max-w-xl text-base sm:text-lg">
+              Explorez l'univers crypto. Achetez, vendez et transférez vos
+              actifs en quelques secondes, en toute sécurité.
+            </p>
 
-          <div className="grid sm:grid-cols-3 grid-cols-2 w-full mt-10">
-            <div className={cn("rounded-tl-2xl", companyCommonStyles)}>
-              Reliability
-            </div>
-            <div className={companyCommonStyles}>Security</div>
-            <div className={cn("sm:rounded-tr-2xl", companyCommonStyles)}>
-              Ethereum
-            </div>
-            <div className={cn("sm:rounded-bl-2xl", companyCommonStyles)}>
-              Web 3.0
-            </div>
-            <div className={companyCommonStyles}>Low Fees</div>
-            <div className={cn("rounded-br-2xl", companyCommonStyles)}>
-              Blockchain
-            </div>
-          </div>
-        </div>
+            {/* CTA */}
+            <div className="flex flex-wrap gap-3 mt-8">
+              {!currentAccount && (
+                <button
+                  type="button"
+                  onClick={connectWallet}
+                  className={cn(
+                    "flex items-center justify-center gap-2",
+                    "bg-[#2952e3] hover:bg-[#2546bd]",
+                    "py-3 px-6 rounded-full text-white font-semibold",
+                    "transition-colors cursor-pointer",
+                    "focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                  )}
+                >
+                  <PlayCircle size={20} />
+                  Connect Wallet
+                </button>
+              )}
 
-        <div className="flex flex-col flex-1 items-center justify-start w-full mf:mt-0 mt-10">
-          <div className="p-3 flex justify-end items-start flex-col rounded-xl h-40 sm:w-72 w-full my-5 eth-card white-glassmorphism">
-            <div className="flex justify-between flex-col w-full h-full">
-              <div className="flex justify-between items-start">
-                <div className="w-10 h-10 rounded-full border-2 border-white flex justify-center items-center">
-                  <EthereumIcon className="w-5 h-5 text-white" />
-                </div>
-                <Info size={17} color="#fff" />
-              </div>
-              <div>
-                <p className="text-white font-light text-sm">
-                  {shortenAddress(currentAccount)}
-                </p>
-                <p className="text-white font-semibold text-lg mt-1">
-                  Ethereum
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <form
-            onSubmit={handleSubmit}
-            className="p-5 sm:w-96 w-full flex flex-col justify-start items-center blue-glassmorphism"
-          >
-            <Input
-              placeholder="Address To"
-              name="addressTo"
-              type="text"
-              handleChange={handleChange}
-            />
-            <Input
-              placeholder="Amount (ETH)"
-              name="amount"
-              type="number"
-              handleChange={handleChange}
-            />
-            <Input
-              placeholder="Keyword (Gif)"
-              name="keyword"
-              type="text"
-              handleChange={handleChange}
-            />
-            <Input
-              placeholder="Enter Message"
-              name="message"
-              type="text"
-              handleChange={handleChange}
-            />
-
-            <div className="h-[1px] w-full bg-gray-400 my-2" />
-
-            {isLoading ? (
-              <Loader />
-            ) : (
-              <button
-                type="submit"
-                className="text-white w-full mt-2 border-[1px] p-2 border-[#3d4f7c] hover:bg-[#3d4f7c] rounded-full cursor-pointer"
+              <Link
+                href="/transfer"
+                className={cn(
+                  "flex items-center justify-center gap-2",
+                  "border border-[#3d4f7c] hover:bg-[#3d4f7c]",
+                  "py-3 px-6 rounded-full text-white font-semibold",
+                  "transition-colors",
+                  "focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                )}
               >
-                Send now
-              </button>
-            )}
-          </form>
+                <Send size={18} />
+                Envoyer des cryptos
+              </Link>
+            </div>
+
+            {/* Features */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full mt-12 max-w-lg">
+              {features.map(({ label, icon: Icon }) => (
+                <div
+                  key={label}
+                  className={cn(
+                    "flex items-center gap-2 px-3 py-3",
+                    "border border-white/10 rounded-xl",
+                    "text-white/80 text-sm font-light",
+                    "hover:border-white/20 hover:bg-white/5 transition-colors"
+                  )}
+                >
+                  <Icon size={16} className="text-[#2952e3] shrink-0" />
+                  <span>{label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Colonne droite : image */}
+          <div className="flex-1 w-full max-w-md lg:max-w-lg">
+            <div className="relative w-full aspect-square">
+              <Image
+                src="/crypto-send.png"
+                alt="Illustration d'envoi de cryptomonnaies"
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                priority
+                className="object-contain drop-shadow-2xl -rotate-30"
+              />
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
