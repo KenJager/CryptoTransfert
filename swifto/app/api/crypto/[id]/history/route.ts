@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { coinpaprika } from "@/lib/coinpaprika";
 
-export const revalidate = 86400; // Cache 24h
-
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }

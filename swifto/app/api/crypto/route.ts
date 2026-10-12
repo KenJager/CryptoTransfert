@@ -5,7 +5,6 @@ export async function GET() {
     // ✅ Fetch direct vers /tickers qui contient les prix
     const res = await fetch(
       "https://api.coinpaprika.com/v1/tickers?quotes=USD",
-      { next: { revalidate: 600 } } // Cache 10min (free tier)
     );
 
     if (!res.ok) throw new Error(`CoinPaprika error: ${res.status}`);

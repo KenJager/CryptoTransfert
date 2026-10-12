@@ -1,14 +1,7 @@
 import type { Metadata } from "next";
-import { Open_Sans } from "next/font/google";
 import "./globals.css";
 import { Footer, Navbar } from "@/components";
 import { Providers } from "@/lib/providers";
-
-const openSans = Open_Sans({
-  subsets: ["latin"],
-  variable: "--font-open-sans",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "Swifto — Send Crypto Across the World",
@@ -25,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${openSans.variable} h-full antialiased`}>
+    <html lang="en">
       <body className="min-h-full flex flex-col bg-dark-bg text-white">
         <Providers>
           <Navbar />

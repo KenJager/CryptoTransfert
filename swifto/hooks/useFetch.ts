@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 const APIKEY = process.env.NEXT_PUBLIC_GIPHY_API as string | undefined;
 
 interface UseFetchProps {
-  keyword: string;
+  keyword?: string;
 }
 
 const FALLBACK_GIF =

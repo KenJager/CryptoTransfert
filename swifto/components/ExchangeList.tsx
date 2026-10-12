@@ -23,6 +23,14 @@ export default function ExchangeList() {
     );
   }
 
+  if (!exchanges || exchanges.length === 0) {
+    return (
+      <div className="p-6 text-white/60 text-center">
+        Aucun exchange disponible.
+      </div>
+    );
+  }
+
   return (
     <div className="overflow-x-auto rounded-xl border border-white/10">
       <table className="w-full" aria-label="exchanges table">
