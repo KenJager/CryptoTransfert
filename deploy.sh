@@ -1,33 +1,51 @@
 #!/bin/bash
-set -e  # Arrête le script à la première erreur
+set -euo pipefail
 
 # Configuration
 APP_NAME="swifto"
 APP_DIR="/home/ken/www/CryptoTransfert"
+PROJECT_DIR="$APP_DIR/swifto"
 BRANCH="main"
 
-echo "🚀 Déploiement de $APP_NAME..."
+log() {
+  echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1"
+}
 
-# 1. Aller dans le dossier
-cd "$APP_DIR"
+log "🚀 Déploiement de $APP_NAME"
+
+# 1. Aller dans le dossier racine du repo
+cd "$APP_DIR" || { log "❌ Dossier introuvable : $APP_DIR"; exit 1; }
 
 # 2. Pull les dernières modifs
-echo "📥 Pull des dernières modifications..."
-git pull origin "$BRANCH"
+log "📥 Pull des dernières modifications..."
+git fetch origin
+git reset --hard "origin/$BRANCH"
 
-# 3. Installer les dépendances
-echo "📦 Installation des dépendances..."
+# 3. Aller dans le dossier du projet Next.js
+cd "$PROJECT_DIR" || { log "❌ Dossier introuvable : $PROJECT_DIR"; exit 1; }
+
+# Vérifier que package.json existe
+if [ ! -f "package.json" ]; then
+  log "❌ package.json introuvable dans $PROJECT_DIR"
+  exit 1
+fi
+
+# 4. Installer les dépendances
+log "📦 Installation des dépendances..."
 pnpm install --frozen-lockfile
 
-# 4. Build
-echo "🔨 Build de l'application..."
+# 5. Build
+log "🔨 Build de l'application..."
 pnpm run build
 
-# 5. Redémarrer PM2
-echo "🔄 Redémarrage de PM2..."
-pm2 restart "$APP_NAME" || pm2 start pnpm --name "$APP_NAME" -- start
+# 6. Redémarrer PM2
+log "🔄 Redémarrage de PM2..."
+if pm2 describe "$APP_NAME" > /dev/null 2>&1; then
+  pm2 restart "$APP_NAME" --update-env
+else
+  pm2 start pnpm --name "$APP_NAME" -- start
+fi
 
-# 6. Sauvegarder la config PM2
 pm2 save
 
-echo "✅ Déploiement terminé avec succès !"
+log "✅ Déploiement terminé avec succès !"
