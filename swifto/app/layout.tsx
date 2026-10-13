@@ -7,9 +7,6 @@ export const metadata: Metadata = {
   title: "Swifto — Send Crypto Across the World",
   description:
     "Explore the crypto world. Buy and sell cryptocurrencies easily on Krypto.",
-  icons: {
-    icon: "/logo-img.png",
-  },
 };
 
 export default function RootLayout({
@@ -19,6 +16,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <meta name="apple-mobile-web-app-title" content="Swifto" />
+      </head>
       <body className="min-h-full flex flex-col bg-dark-bg text-white">
         <Providers>
           <Navbar />
